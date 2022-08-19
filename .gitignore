@@ -127,3 +127,31 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+import numpy as np
+import math
+
+def g(f):
+    N = len(f)
+    g = np.zeros(N//2, dtype=complex)
+    for i in range(N//2):
+        g[i] = f[i] + f[i + N//2]
+    return g
+    
+def h(f):
+    N = len(f)
+    h = np.zeros(N//2, dtype=complex)
+    for i in range(N//2):
+        h[i] = (f[i]-f[i + N//2])*(math.e**(-2*np.pi*i*complex(0, 1)/N))
+    return h
+    
+def FFT(f):
+    N = len(f)
+    if N==1:
+        return f
+    if not np.log2(N).is_integer():
+        return []
+    F = np.zeros(N, dtype=complex)
+    F[0::2] = (1/2)*FFT(g(f))
+    F[1::2] = (1/2)*FFT(h(f))      
+    return F
